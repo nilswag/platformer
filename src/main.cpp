@@ -1,9 +1,8 @@
 #include <iostream>
-#include <GLFW/glfw3.h>
+#include "util/log.h"
 
 int main()
 {
-	glfwInit();
-	std::cout << "Hello World!" << std::endl;
+	logger::log();
 	return 0;
 }
