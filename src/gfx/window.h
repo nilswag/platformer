@@ -4,7 +4,7 @@
 class Window
 {
 public:
-	Window() : handle(nullptr), width(800), height(800), title("platformer") {}
+	Window() = delete;
 	Window(int width, int height, const char* title);
 	~Window();
 	

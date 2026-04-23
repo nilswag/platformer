@@ -29,7 +29,7 @@ namespace logger {
 		case Level::WARNING: std::cout << "\033[33m" << "[WARN]\t" << msg << "\033[0m\n";  break;
 		case Level::ERROR:	 std::cout << "\033[31m" << "[ERROR]\t" << msg << "\033[0m\n"; break;
 		case Level::FATAL:
-			std::cout << "\033[31m" << "[FATAL]" << msg << '\n';
+			std::cout << "\033[31m" << "[FATAL]\t" << msg << "\033[0m\n";
 			break;
 		}	
 #endif
