@@ -31,10 +31,9 @@ namespace logger {
 		case Level::FATAL:
 			std::cout << "\033[31m" << "[FATAL]" << msg << '\n';
 			break;
-		}
-#else
-		if (level == Level::FATAL) std::abort();
+		}	
 #endif
+		if (level == Level::FATAL) std::abort();
 	}
 
 	template <typename... Args>
