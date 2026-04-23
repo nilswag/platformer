@@ -3,6 +3,11 @@
 
 int main()
 {
-	logger::log();
+	logger::debug("Hello {}!", "Debug");
+	logger::trace("Hello Trace!");
+	logger::info("Hello Info!");
+	logger::warning("Hello Warning!");
+	logger::error("Hello Error!");
+
 	return 0;
 }
