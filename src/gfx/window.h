@@ -7,9 +7,13 @@ public:
 	Window() = delete;
 	Window(int width, int height, const char* title);
 	~Window();
-	
+
+	void loop();
+
 private:
-	GLFWwindow* handle;
+	GLFWwindow* window;
 	int width, height;
 	const char* title;
+
+	double dt;
 };

@@ -1,15 +1,20 @@
-#include <iostream>
-#include <GLFW/glfw3.h>
+
+
 #include "window.h"
-#include "../util/log.h"
+#include "util/log.h"
 
 Window::Window(int width, int height, const char* title)
-	: handle(nullptr), width(width), height(height), title(title)
+	: width(width), height(height), title(title), window(nullptr)
 {
-	if (!glfwInit()) logger::fatal("Unable to initialize glfw.");
+
 }
 
 Window::~Window()
+{
+
+}
+
+void Window::loop()
 {
 
 }
