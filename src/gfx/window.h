@@ -11,14 +11,16 @@ public:
 	static Window& getInstance();
 
 	void loop();
-
-	double dt();
+	inline double delta() const { return m_dt; }
+	inline int width() const { return m_width; }
+	inline int height() const { return m_height; }
 
 private:
 	Window();
 	static void frameBufferSizeCallback(GLFWwindow* window, int width, int height);
 
-	GLFWwindow* window;
-	int width, height;
-	const char* title;
+	GLFWwindow* m_window;
+	int m_width, m_height;
+	const char* m_title;
+	double m_dt;
 };
