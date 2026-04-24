@@ -1,9 +1,9 @@
-#include <GLFW/glfw3.h>
-#include "util/log.h"
-
-
+#include "gfx/window.h"
 
 int main()
 {
+	Window window(800, 800, "platformer");
+	window.loop();
+
 	return 0;
 }
