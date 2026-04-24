@@ -2,7 +2,7 @@
 
 int main()
 {
-	Window window(800, 800, "platformer");
+	Window& window = Window::getInstance();
 	window.loop();
 
 	return 0;

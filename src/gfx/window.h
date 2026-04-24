@@ -4,16 +4,18 @@
 class Window
 {
 public:
-	Window() = delete;
-	Window(int width, int height, const char* title);
+	Window(const Window&) = delete;
+	void operator=(const Window&) = delete;
 	~Window();
+
+	static Window& getInstance();
 
 	void loop();
 
 private:
+	Window();
+
 	GLFWwindow* window;
 	int width, height;
 	const char* title;
-
-	double dt;
 };
