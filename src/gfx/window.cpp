@@ -1,5 +1,7 @@
 #include <chrono>
+#include <cmath>
 #include <glad/glad.h>
+
 #include "window.h"
 #include "util/log.h"
 
@@ -33,7 +35,7 @@ Window::Window()
 	m_window = glfwCreateWindow(m_width, m_height, m_title, nullptr, nullptr);
 	if (!m_window)
 		logger::fatal("Failed to initialize glfw window.");
-	logger::trace("Window initialized.");
+	logger::trace("Window (internal) initialized.");
 	glfwMakeContextCurrent(m_window);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -59,21 +61,43 @@ Window::~Window()
 
 void Window::loop()
 {
-	logger::debug("Main loop started.");
+	logger::trace("Main loop started.");
 
 	auto last = std::chrono::high_resolution_clock::now();
 	double timer = 0.0;
+	double sum = 0.0;
+	long count = 0;
 
 	while (!glfwWindowShouldClose(m_window))
 	{
 		auto now = std::chrono::high_resolution_clock::now();
-		std::chrono::duration<double> duration = last - now;
+		std::chrono::duration<double> duration = now - last;
 		last = now;
 		m_dt = duration.count();
 
 		glfwPollEvents();
 		
+
 		timer += m_dt;
-		logger::info("{}", timer);
+		sum += m_dt;
+		count++;
+
+		if (timer >= 1.0)
+		{
+			timer = 0.0;
+			double avgDt = sum / count;
+			count = 0;
+
+			int avgFps = static_cast<int>(1.0 / avgDt);
+			double avgMs = avgDt * 1e3;
+
+			logger::debug("FPS: {}, AVG DT: {}ms", avgFps, std::round(avgMs * 100.0) / 100.0);
+		}
+
+		glClear(GL_COLOR_BUFFER_BIT);
+		glClearColor(0.2f, 0.2f, 0.3f, 1.0f);
+		glfwSwapBuffers(m_window);
 	}
+
+	logger::trace("Main loop ended.");
 }
