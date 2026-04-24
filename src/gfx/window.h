@@ -12,8 +12,11 @@ public:
 
 	void loop();
 
+	double dt();
+
 private:
 	Window();
+	static void frameBufferSizeCallback(GLFWwindow* window, int width, int height);
 
 	GLFWwindow* window;
 	int width, height;

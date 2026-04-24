@@ -2,6 +2,16 @@
 #include "window.h"
 #include "util/log.h"
 
+void Window::frameBufferSizeCallback(GLFWwindow* window, int _width, int _height)
+{
+	Window& instance = Window::getInstance();
+	instance.width = _width;
+	instance.height = _height;
+	glViewport(0, 0, _width, _height);
+
+	logger::debug("Window resized to ({}, {}).", _width, _height);
+}
+
 Window& Window::getInstance()
 {
 	static Window instance;
@@ -32,6 +42,9 @@ Window::Window()
 	logger::info("GL Version: {}", (char*)glGetString(GL_VERSION));
 	logger::info("GL Vendor: {}", (char*)glGetString(GL_VENDOR));
 	logger::info("GL Renderer: {}", (char*)glGetString(GL_RENDERER));
+
+	glfwSetFramebufferSizeCallback(window, frameBufferSizeCallback);
+	glViewport(0, 0, width, height);
 
 	logger::debug("Window initialized.");
 }
