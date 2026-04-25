@@ -12,13 +12,11 @@ Logger::Logger()
 	m_level = LogLevel::TRACE;
 }
 
-void Logger::log(LogLevel level, std::string_view tag, std::string_view msg)
+void Logger::log(LogLevel level, std::string_view tag, std::string_view msg) const
 {
-	if (!tag.empty(0))
-
-	if (level >= m_level)
+	if (level <= m_level)
 	{
-		std::println("{}{} {:<10}  {}\e[0m"
+		std::println("{}{:<5} {:<15}  {}\033[0m",
 			colorStr(level),
 			levelStr(level),
 			tag,
@@ -45,12 +43,12 @@ constexpr std::string_view Logger::colorStr(LogLevel level)
 {
 	switch (level)
 	{
-	case LogLevel::FATAL:   return "\e[0;101m";
-	case LogLevel::ERROR:   return "\e[0;101m";
-	case LogLevel::WARNING: return "\e[0;103m";
-	case LogLevel::INFO:    return "\e[0;107m";
-	case LogLevel::DEBUG:   return "\e[0;105m";
-	case LogLevel::TRACE:   return "\e[0;106m";
-	default:				return "\e[0m";
+	case LogLevel::FATAL:   return "\033[31m";
+	case LogLevel::ERROR:   return "\033[31m";
+	case LogLevel::WARNING: return "\033[33m";
+	case LogLevel::INFO:    return "\033[37m";
+	case LogLevel::DEBUG:   return "\033[35m";
+	case LogLevel::TRACE:   return "\033[36m";
+	default:				return "\033[0m";
 	}
 }

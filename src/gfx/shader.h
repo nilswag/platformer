@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 class Shader
 {
@@ -12,8 +13,8 @@ public:
 	unsigned int id() const { return m_id; }
 
 private:
-	bool compileShader(int& id, const char* shaderSrc, unsigned int type);
+	bool compileShader(int& id, const char* shaderSrc, unsigned int type) const;
 
 	unsigned int m_id;
-	const char* m_tag;
+	std::string m_tag;
 };
