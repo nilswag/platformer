@@ -1,8 +1,7 @@
 #include <vector>
-#include <format>
 #include <glad/glad.h>
-#include "shader.h"
 #include "util/log.h"
+#include "shader.h"
 
 bool Shader::compileShader(int& id, const char* shaderSrc, unsigned int type)
 {

@@ -1,7 +1,7 @@
 #include <glad/glad.h>
+#include "util/log.h"
 #include "renderer.h"
 #include "shader.h"
-#include "util/log.h"
 
 #include "shaders/quad.glsl.hpp"
 
@@ -33,7 +33,7 @@ Renderer::Renderer()
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	logger::debug("Renderer", "Initialized (OpenGL)");
+	log().debug("Renderer", "Initialized (OpenGL)");
 }
 
 void Renderer::renderQuad(Quad& quad)
