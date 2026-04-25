@@ -3,6 +3,8 @@
 #include <format>
 #include <string>
 
+// TODO: add log categories like [BLAH] and stuff.
+
 namespace logger {
 
 	enum class Level

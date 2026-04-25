@@ -1,6 +1,7 @@
 #include <glad/glad.h>
 #include "renderer.h"
 #include "shader.h"
+#include "util/log.h"
 
 #include "shaders/quad.glsl.hpp"
 
@@ -24,13 +25,15 @@ Renderer::Renderer()
 	};
 
 	m_shaders[(size_t)ShaderType::QUAD] = std::make_unique<Shader>(
-		shaders::quad::vertex, shaders::quad::fragment
+		shaders::quad::vertex, shaders::quad::fragment, "Quad"
 	);
 
 	GLuint vbo;
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	logger::debug("[Renderer] Initialized (OpenGL)");
 }
 
 void Renderer::renderQuad(Quad& quad)

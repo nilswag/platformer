@@ -3,7 +3,7 @@
 class Shader
 {
 public:
-	Shader(const char* vertexSrc, const char* fragmentSrc, const char* tag = "Unspecified");
+	Shader(const char* vertexSrc, const char* fragmentSrc, const char* tag);
 	~Shader();
 
 	Shader(const Shader&) = delete;
@@ -12,6 +12,8 @@ public:
 	unsigned int id() const { return m_id; }
 
 private:
-	unsigned int m_id;
+	bool compileShader(int& id, const char* shaderSrc, unsigned int type);
 
+	unsigned int m_id;
+	const char* m_tag;
 };
