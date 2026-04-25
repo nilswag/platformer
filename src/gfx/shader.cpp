@@ -77,5 +77,5 @@ Shader::Shader(const char* vertexSrc, const char* fragmentSrc, const char* tag)
 
 Shader::~Shader()
 {
-
+	// TODO: implement
 }

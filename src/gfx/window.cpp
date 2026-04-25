@@ -88,6 +88,7 @@ void Window::loop()
 		{
 			timer -= 1.0;
 			double avgDt = sum / count;
+			sum = 0.0;
 			count = 0;
 
 			int avgFps = static_cast<int>(1.0 / avgDt);
