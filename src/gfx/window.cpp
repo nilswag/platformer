@@ -22,8 +22,13 @@ Window& Window::getInstance()
 }
 
 Window::Window()
-	: m_width(800), m_height(800), m_title("platformer"), m_window(nullptr), m_dt(0.0)
 {
+	m_width = 800;
+	m_height = 800;
+	m_title = "platformer";
+	m_window = nullptr;
+	m_dt = 0.0;
+
 	if (!glfwInit())
 		logger::fatal("Failed to initialize glfw.");
 	logger::trace("Glfw initialized.");
@@ -95,7 +100,7 @@ void Window::loop()
 		}
 
 		glClear(GL_COLOR_BUFFER_BIT);
-		glClearColor(0.2f, 0.2f, 0.3f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glfwSwapBuffers(m_window);
 	}
 
