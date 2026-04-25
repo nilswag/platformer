@@ -1,22 +1,12 @@
 #include <vector>
+#include <format>
 #include <glad/glad.h>
 #include "shader.h"
 #include "util/log.h"
 
 bool Shader::compileShader(int& id, const char* shaderSrc, unsigned int type)
 {
-	const char* prefix = "INVALID";
-	switch (type)
-	{
-	case GL_VERTEX_SHADER:
-		prefix = "VERTEX";
-		break;
-	case GL_FRAGMENT_SHADER:
-		prefix = "FRAGMENT";
-		break;
-	}
-
-	logger::trace("[Shader:{}][{}] Compile", m_tag, prefix);
+	log().trace(std::format("Shader:{}", m_tag), "Compile");
 	id = glCreateShader(type);
 	glShaderSource(id, 1, &shaderSrc, nullptr);
 	glCompileShader(id);
@@ -27,14 +17,14 @@ bool Shader::compileShader(int& id, const char* shaderSrc, unsigned int type)
 	{
 		int length;
 		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
-		std::vector<char> log(length);
+		std::vector<char> infoLog(length);
 
-		glGetShaderInfoLog(id, length, nullptr, log.data());
-		logger::error("[Shader:{}][{}] Compile failed, reason:\n{}", m_tag, prefix, log.data());
+		glGetShaderInfoLog(id, length, nullptr, infoLog.data());
+		log().err(std::format("Shader:{}", m_tag), "Compile error, reason:\n{}", infoLog.data());
 		return false;
 	}
 
-	logger::trace("[Shader:{}][{}] Compile ok (ID={})", m_tag, prefix, id);
+	log().trace(std::format("Shader:{}", m_tag), "Compile ok(ID = {})", id);
 
 	return true;
 }
@@ -46,9 +36,9 @@ Shader::Shader(const char* vertexSrc, const char* fragmentSrc, const char* tag)
 
 	int vertexShader, fragmentShader;
 	if (!compileShader(vertexShader, vertexSrc, GL_VERTEX_SHADER))
-		logger::warning("[Shader:{}] No vertex shader", tag);
+		log().warn(std::format("Shader:{}", m_tag), "No vertex shader");
 	if (!compileShader(fragmentShader, fragmentSrc, GL_FRAGMENT_SHADER))
-		logger::warning("[Shader:{}] No fragment shader", tag);
+		log().warn(std::format("Shader:{}", m_tag), "No fragment shader");
 
 	glAttachShader(m_id, vertexShader);
 	glAttachShader(m_id, fragmentShader);
@@ -60,14 +50,14 @@ Shader::Shader(const char* vertexSrc, const char* fragmentSrc, const char* tag)
 	{
 		int length;
 		glGetProgramiv(m_id, GL_INFO_LOG_LENGTH, &length);
-		std::vector<char> log(length);
+		std::vector<char> infoLog(length);
 
-		glGetProgramInfoLog(m_id, length, nullptr, log.data());
-		logger::error("[Shader:{}] Linking failed, reason:\n{}", m_tag, log.data());
+		glGetProgramInfoLog(m_id, length, nullptr, infoLog.data());
+		log().err(std::format("Shader:{}", m_tag), "Linking failed, reason:\n{}", infoLog.data());
 		return;
 	}
 
-	logger::debug("[Shader:{}] Linked ok (ID={})", tag, m_id);
+	log().debug(std::format("Shader:{}", m_tag), "Linking ok (ID={})", m_id);
 }
 
 Shader::~Shader()

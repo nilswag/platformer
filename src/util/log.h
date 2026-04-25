@@ -28,7 +28,7 @@ public:
 	}
 
 	template<typename... Args>
-	inline void error(std::string_view tag, std::format_string<Args...> fmt, Args... args)
+	inline void err(std::string_view tag, std::format_string<Args...> fmt, Args... args)
 	{
 		log(LogLevel::ERROR, tag, std::format(fmt, args...));
 	}

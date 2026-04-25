@@ -33,7 +33,7 @@ Renderer::Renderer()
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	logger::debug("[Renderer] Initialized (OpenGL)");
+	logger::debug("Renderer", "Initialized (OpenGL)");
 }
 
 void Renderer::renderQuad(Quad& quad)
