@@ -1,87 +1,78 @@
 #pragma once
-#include <print>
-#include <string>
+#include <string_view>
+#include <format>
 
-namespace logger {
+enum class LogLevel
+{
+	FATAL = 0,
+	ERROR,
+	WARNING,
+	INFO,
+	DEBUG,
+	TRACE
+};
 
-	constexpr std::string_view WHITE  = "\033[37m";
-	constexpr std::string_view RED	  = "\e[0;31m";
-	constexpr std::string_view YELLOW = "\e[0;33m";
-	constexpr std::string_view BLUE	  = "\e[0;34m";
-	constexpr std::string_view CYAN   = "\e[0;36m";
+class Logger
+{
+public:
+	Logger(const Logger&) = delete;
+	void operator=(const Logger&) = delete;
 
-	enum class Level
+	Logger(Logger&&) = delete;
+	void operator=(Logger&&) = delete;
+
+	template<typename... Args>
+	inline void fatal(std::string_view tag, std::format_string<Args...> fmt, Args... args)
 	{
-		Debug,
-		Trace,
-		Info,
-		Warning,
-		Error,
-		Fatal
-	};
-
-	template <typename... Args>
-	inline void log(const Level level, std::string_view tag, Args... args)
-	{
-#ifdef _DEBUG
-		std::string_view color;
-		std::string_view prefix;
-		switch (level)
-		{
-			case Level::Debug:
-				color = BLUE;	prefix = "DEBUG"; break;
-			case Level::Trace:
-				color = CYAN;	prefix = "TRACE"; break;
-			case Level::Info:
-				color = WHITE;	prefix = "INFO";  break;
-			case Level::Warning:
-				color = YELLOW;	prefix = "WARN";  break;
-			case Level::Error:
-				color = RED;	prefix = "ERROR"; break;
-			case Level::Fatal:
-				color = RED;	prefix = "FATAL"; break;
-		}
-
-		std::print("{}[{}][{}]\t", color, prefix, tag);
-		std::println(args...);
-#endif
-		if (level == Level::Fatal) std::abort();
+		log(LogLevel::FATAL, tag, std::format(fmt, args...));
 	}
 
-	template <typename... Args>
-	inline void debug(std::string_view tag, Args... args)
+	template<typename... Args>
+	inline void error(std::string_view tag, std::format_string<Args...> fmt, Args... args)
 	{
-		log(Level::Debug, tag, args...);
+		log(LogLevel::ERROR, tag, std::format(fmt, args...));
 	}
 
-	template <typename... Args>
-	inline void trace(std::string_view tag, Args... args)
+	template<typename... Args>
+	inline void warn(std::string_view tag, std::format_string<Args...> fmt, Args... args)
 	{
-		log(Level::Trace, tag, args...);
+		log(LogLevel::WARNING, tag, std::format(fmt, args...));
 	}
 
-	template <typename... Args>
-	inline void info(std::string_view tag, Args... args)
+	template<typename... Args>
+	inline void info(std::string_view tag, std::format_string<Args...> fmt, Args... args)
 	{
-		log(Level::Info, tag, args...);
+		log(LogLevel::INFO, tag, std::format(fmt, args...));
 	}
 
-	template <typename... Args>
-	inline void warning(std::string_view tag, Args... args)
+	template<typename... Args>
+	inline void debug(std::string_view tag, std::format_string<Args...> fmt, Args... args)
 	{
-		log(Level::Warning, tag, args...);
+		log(LogLevel::DEBUG, tag, std::format(fmt, args...));
 	}
 
-	template <typename... Args>
-	inline void error(std::string_view tag, Args... args)
+	template<typename... Args>
+	inline void trace(std::string_view tag, std::format_string<Args...> fmt, Args... args)
 	{
-		log(Level::Error, tag, args...);
+		log(LogLevel::TRACE, tag, std::format(fmt, args...));
 	}
 
-	template <typename... Args>
-	inline void fatal(std::string_view tag, Args... args)
-	{
-		log(Level::Fatal, tag, args...);
-	}
+	inline LogLevel getLevel() const { return m_level; }
+	inline void setLevel(LogLevel level) { m_level = level; }
 
+	static Logger& getInstance();
+
+private:
+	Logger();
+	void log(LogLevel level, std::string_view tag, std::string_view msg) const;
+
+	static constexpr std::string_view levelStr(LogLevel level);
+	static constexpr std::string_view colorStr(LogLevel level);
+
+	LogLevel m_level;
+};
+
+inline Logger& log()
+{
+	return Logger::getInstance();
 }
