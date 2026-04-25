@@ -31,7 +31,7 @@ Window::Window()
 
 	if (!glfwInit())
 		logger::fatal("Failed to initialize glfw.");
-	logger::trace("Glfw initialized.");
+	logger::debug("Glfw initialized.");
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
@@ -40,12 +40,12 @@ Window::Window()
 	m_window = glfwCreateWindow(m_width, m_height, m_title, nullptr, nullptr);
 	if (!m_window)
 		logger::fatal("Failed to initialize glfw window.");
-	logger::trace("Window (internal) initialized.");
+	logger::debug("Window (internal) initialized.");
 	glfwMakeContextCurrent(m_window);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 		logger::fatal("Failed to initialize glad.");
-	logger::trace("Glad initialized.");
+	logger::debug("Glad initialized.");
 
 	logger::info("GL Version: {}", (char*)glGetString(GL_VERSION));
 	logger::info("GL Vendor: {}", (char*)glGetString(GL_VENDOR));

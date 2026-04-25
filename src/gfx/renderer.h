@@ -1,5 +1,7 @@
 #pragma once
 #include <array>
+#include <memory>
+#include "shader.h"
 
 using Color = std::array<float, 4>;
 static constexpr Color WHITE = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -18,7 +20,7 @@ struct Quad
 		m_height = height;
 		m_color = color;
 	}
-};
+}; 
 
 class Renderer
 {
@@ -34,5 +36,13 @@ public:
 
 private:
 	Renderer();
+
+	enum class ShaderType
+	{
+		QUAD = 0,
+		N
+	};
+
+	std::array<std::unique_ptr<Shader>, (size_t)ShaderType::N> m_shaders;
 
 };
