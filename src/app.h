@@ -1,12 +1,22 @@
 #pragma once
+#include "gfx/window.h"
 
 class App
 {
 
 public:
 	App();
-	~App();
+	~App() = default;
 
-	void run() const;
+	App(const App&) = delete;
+	void operator=(const App&) = delete;
+
+	App(App&&) = delete;
+	void operator=(App&&) = delete;
+
+	void run();
+
+private:
+	Window m_window;
 
 };
