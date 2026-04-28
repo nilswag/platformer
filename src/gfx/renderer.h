@@ -39,10 +39,12 @@ private:
 
 	enum class ShaderType
 	{
-		QUAD = 0,
+		BASIC = 0,
 		N
 	};
 
 	std::array<std::unique_ptr<Shader>, (size_t)ShaderType::N> m_shaders;
+
+	unsigned int m_vaoQuad;
 
 };

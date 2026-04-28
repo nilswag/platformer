@@ -4,6 +4,7 @@
 
 #include "util/log.h"
 #include "window.h"
+#include "renderer.h"
 
 void Window::frameBufferSizeCallback(GLFWwindow* window, int width, int height)
 {
@@ -78,7 +79,6 @@ void Window::loop()
 		m_dt = duration.count();
 
 		glfwPollEvents();
-		
 
 		timer += m_dt;
 		sum += m_dt;
@@ -99,6 +99,9 @@ void Window::loop()
 
 		glClear(GL_COLOR_BUFFER_BIT);
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+		Renderer::getInstance().renderQuad(0, 0, 100, 100);
+
 		glfwSwapBuffers(m_window);
 	}
 

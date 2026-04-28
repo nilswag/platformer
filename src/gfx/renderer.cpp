@@ -24,15 +24,18 @@ Renderer::Renderer()
 		0, 1, 2, 3
 	};
 
-	m_shaders[(size_t)ShaderType::QUAD] = std::make_unique<Shader>(
+	m_shaders[(size_t)ShaderType::BASIC] = std::make_unique<Shader>(
 		shaders::quad::vertex, shaders::quad::fragment, "Quad"
 	);
 
-	GLuint vbo;
+	glGenVertexArrays(1, &m_vaoQuad);
+
+	unsigned int vbo;
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+	glEnableVertexAttribArray(0);
 
 	log().debug("Renderer", "Initialized (OpenGL)");
 }
@@ -44,5 +47,10 @@ void Renderer::renderQuad(Quad& quad)
 
 void Renderer::renderQuad(float x, float y, float width, float height, Color color)
 {
-
+	for (std::unique_ptr<Shader>& shader : m_shaders)
+	{
+		(*shader).use();
+		glBindVertexArray(m_vaoQuad);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+	}
 }

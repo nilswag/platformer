@@ -10,6 +10,7 @@ public:
 	Shader(const Shader&) = delete;
 	void operator=(const Shader&) = delete;
 
+	void use() const;
 	unsigned int id() const { return m_id; }
 
 private:

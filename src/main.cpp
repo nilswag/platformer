@@ -1,13 +1,9 @@
-#include "gfx/window.h"
-#include "gfx/renderer.h"
+#include "app.h"
 
 int main()
 {
-	Window& window = Window::getInstance();
-
-	Renderer& renderer = Renderer::getInstance();
-
-	window.loop();
+	App app;
+	app.run();
 
 	return 0;
 }
