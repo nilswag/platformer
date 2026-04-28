@@ -72,10 +72,13 @@ Shader::Shader(const char* vertexSrc, const char* fragmentSrc, const char* tag)
 		return;
 	}
 
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
+
 	log().debug(m_tag, "Linking ok (ID={})", m_id);
 }
 
 Shader::~Shader()
 {
-	// TODO: implement
+	glDeleteProgram(m_id);
 }
