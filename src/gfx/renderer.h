@@ -13,30 +13,26 @@ struct Quad
 	std::array<float, 4> m_color;
 
 	Quad(float x, float y, float width, float height, Color color = WHITE)
-	{
-		m_x = x;
-		m_y = y;
-		m_width = width;
-		m_height = height;
-		m_color = color;
-	}
+		: m_x(x), m_y(y), m_width(width), m_height(height), m_color(color)
+	{ }
 }; 
 
 class Renderer
 {
-
 public:
+	Renderer();
+	~Renderer() = default;
+
 	Renderer(const Renderer&) = delete;
 	void operator=(const Renderer&) = delete;
 
-	static Renderer& getInstance();
+	Renderer(Renderer&&) = delete;
+	void operator=(Renderer&&) = delete;
 
-	void renderQuad(Quad& quad);
+	inline void renderQuad(Quad& quad) { renderQuad(quad.m_x, quad.m_y, quad.m_width, quad.m_height, quad.m_color); };
 	void renderQuad(float x, float y, float width, float height, Color color = WHITE);
 
 private:
-	Renderer();
-
 	enum class ShaderType
 	{
 		BASIC = 0,
@@ -44,7 +40,4 @@ private:
 	};
 
 	std::array<std::unique_ptr<Shader>, (size_t)ShaderType::N> m_shaders;
-
-	unsigned int m_vaoQuad;
-
 };

@@ -3,7 +3,6 @@
 
 class App
 {
-
 public:
 	App();
 	~App() = default;
@@ -18,5 +17,4 @@ public:
 
 private:
 	Window m_window;
-
 };

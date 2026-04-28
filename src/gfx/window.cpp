@@ -16,11 +16,8 @@ void Window::frameBufferSizeCallback(GLFWwindow* window, int width, int height)
 }
 
 Window::Window(int width, int height, std::string_view title)
+	:m_width(width), m_height(height), m_window(nullptr)
 {
-	m_width = width;
-	m_height = height;
-	m_window = nullptr;
-
 	if (!glfwInit())
 		log().fatal("Window", "Failed to initialize glfw");
 
