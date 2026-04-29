@@ -1,6 +1,7 @@
 #pragma once
 #include <array>
 #include <memory>
+
 #include "shader.h"
 
 using Color = std::array<float, 4>;
@@ -39,5 +40,6 @@ private:
 		N
 	};
 
-	std::array<std::unique_ptr<Shader>, (size_t)ShaderType::N> m_shaders;
+	std::array<std::unique_ptr<Shader>, static_cast<int>(ShaderType::N)> m_shaders;
+	std::array<unsigned int, static_cast<int>(ShaderType::N)> m_vaos;
 };

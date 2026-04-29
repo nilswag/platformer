@@ -1,6 +1,6 @@
 #pragma once
 
-namespace shaders::quad
+namespace shaders::basic
 {
 	inline constexpr const char* vertex = R"(
 		#version 460 core

@@ -1,4 +1,5 @@
 #include <print>
+
 #include "log.h"
 
 Logger& Logger::getInstance()
