@@ -11,7 +11,7 @@ layout(location = 0) out vec4 vColor;
 
 void main()
 {
-	gl_Position = vec4(pos, 1.0f);
+	gl_Position = vec4(pos, 1.0);
 	vColor = color;
 }
 	)";
@@ -22,11 +22,9 @@ layout(location = 0) in vec4 color;
 
 out vec4 FragColor;
 		
-uniform vec3 test;
-
 void main()
 {
-	FragColor = vec4(test, 1.0f);
+	FragColor = color;
 }
 	)";
 }

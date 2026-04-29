@@ -10,10 +10,25 @@ public:
 	~Shader();
 
 	void use() const;
-	unsigned int id() const { return m_id; }
+	void setFloat(std::string& name, float value);
+	void setInt(std::string& name, int value);
+	void setBool(std::string& name, bool value);
+
+	inline unsigned int id() const { return m_id; }
+
+	inline void setFloat(std::string& name, float value) { if (!hasUniform(name)) return; glUniform1f(m_uniforms[name], value); }
+	inline void setInt(std::string& name, int value) {     if (!hasUniform(name)) return; glUniform1i(m_uniforms[name], value); }
+	inline void setBool(std::string& name, bool value) {   if (!hasUniform(name)) return; glUniform1ui(m_uniforms[name], value); }
 
 private:
 	bool compileShader(int& id, std::string_view shaderSrc, unsigned int type) const;
+
+	inline bool hasUniform(std::string& name)
+	{
+		if (m_uniforms.contains(name)) return true;
+		log().err(m_tag, "Uniform not found ({})", name);
+		return false;
+	}
 
 	unsigned int m_id;
 	std::string m_tag;
