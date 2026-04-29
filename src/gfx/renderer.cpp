@@ -15,11 +15,6 @@ Renderer::Renderer()
 	log().debug("Renderer", "Initialized (OpenGL)");
 }
 
-void Renderer::renderQuad(Quad& quad)
-{
-	renderQuad(quad.m_x, quad.m_y, quad.m_width, quad.m_height, quad.m_color);
-}
-
 void Renderer::renderQuad(float x, float y, float width, float height, Color color)
 {
 
