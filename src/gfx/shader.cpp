@@ -76,6 +76,14 @@ Shader::Shader(const char* vertexSrc, const char* fragmentSrc, const char* tag)
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 
+	int count = 0;
+	glGetProgramiv(m_id, GL_ACTIVE_UNIFORMS, &count);
+	for (int i = 0; i < count; i++)
+	{
+		std::string name;
+		glGetActiveUniform(m_id, i, name.size(), );
+	}
+
 	log().debug(m_tag, "Linking ok (ID={})", m_id);
 }
 

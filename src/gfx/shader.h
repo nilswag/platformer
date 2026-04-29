@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <map>
 
 class Shader
 {
@@ -15,4 +16,6 @@ private:
 
 	unsigned int m_id;
 	std::string m_tag;
+
+	std::map<std::string, int> m_uniforms;
 };
