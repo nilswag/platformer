@@ -1,10 +1,11 @@
 #include <string>
+#include <string_view>
 #include <glad/glad.h>
 
 #include "util/log.h"
 #include "shader.h"
 
-bool Shader::compileShader(int& id, const char* shaderSrc, unsigned int type) const
+bool Shader::compileShader(int& id, std::string_view shaderSrc, unsigned int type) const
 {
 	std::string typeStr;
 	switch (type)
@@ -22,7 +23,9 @@ bool Shader::compileShader(int& id, const char* shaderSrc, unsigned int type) co
 
 	log().trace(m_tag, "Compile ({})", typeStr);
 	id = glCreateShader(type);
-	glShaderSource(id, 1, &shaderSrc, nullptr);
+
+	const char* srcPtr = shaderSrc.data();
+	glShaderSource(id, 1, &srcPtr, nullptr);
 	glCompileShader(id);
 
 	int success;
@@ -44,7 +47,7 @@ bool Shader::compileShader(int& id, const char* shaderSrc, unsigned int type) co
 	return true;
 }
 
-Shader::Shader(const char* vertexSrc, const char* fragmentSrc, const char* tag)
+Shader::Shader(std::string_view vertexSrc, std::string_view fragmentSrc, std::string_view tag)
 {
 	m_tag = std::format("Shader:{}", tag);
 	m_id = glCreateProgram();
@@ -80,8 +83,21 @@ Shader::Shader(const char* vertexSrc, const char* fragmentSrc, const char* tag)
 	glGetProgramiv(m_id, GL_ACTIVE_UNIFORMS, &count);
 	for (int i = 0; i < count; i++)
 	{
-		std::string name;
-		glGetActiveUniform(m_id, i, name.size(), );
+		GLchar name[256];
+		GLint size;
+		GLenum type;
+
+		glGetActiveUniform(m_id, i, sizeof(name), nullptr, &size, &type, name);
+
+		int location = glGetUniformLocation(m_id, name);
+		if (location < 0)
+		{
+			log().warn(m_tag, "Uniform not found ({})", name);
+			continue;
+		}
+
+		m_uniforms.insert({ name, location });
+		log().trace(m_tag, "Found uniform: {} (location={})", name, location);
 	}
 
 	log().debug(m_tag, "Linking ok (ID={})", m_id);
