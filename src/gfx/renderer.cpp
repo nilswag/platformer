@@ -1,4 +1,5 @@
 #include <glad/glad.h>
+#include <memory>
 
 #include "util/log.h"
 #include "renderer.h"

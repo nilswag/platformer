@@ -1,6 +1,6 @@
 #pragma once
-#include "gfx/window.h"
 #include "gfx/renderer.h"
+#include "gfx/window.h"
 
 class App
 {

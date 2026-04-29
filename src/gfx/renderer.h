@@ -30,16 +30,29 @@ public:
 	Renderer(Renderer&&) = delete;
 	void operator=(Renderer&&) = delete;
 
-	inline void renderQuad(Quad& quad) { renderQuad(quad.m_x, quad.m_y, quad.m_width, quad.m_height, quad.m_color); };
-	void renderQuad(float x, float y, float width, float height, Color color = WHITE);
-
-private:
 	enum class ShaderType
 	{
 		BASIC = 0,
 		N
 	};
 
+	inline Shader* getShader(ShaderType type) const
+	{
+		int index = static_cast<int>(type);
+		if (index < 0 || index >= m_shaders.size())
+		{
+			log().err("Renderer", "Invalid shader type: {}", static_cast<int>(type));
+			return nullptr;
+		}
+
+		return m_shaders[index].get();
+	}
+
+	inline void renderQuad(Quad& quad) { renderQuad(quad.m_x, quad.m_y, quad.m_width, quad.m_height, quad.m_color); };
+
+	void renderQuad(float x, float y, float width, float height, Color color = WHITE);
+
+private:
 	std::array<std::unique_ptr<Shader>, static_cast<int>(ShaderType::N)> m_shaders;
 	std::array<unsigned int, static_cast<int>(ShaderType::N)> m_vaos;
 };

@@ -2,6 +2,9 @@
 #include <string>
 #include <string_view>
 #include <map>
+#include <glad/glad.h>
+
+#include "../util/log.h"
 
 class Shader
 {
@@ -10,12 +13,8 @@ public:
 	~Shader();
 
 	void use() const;
-	void setFloat(std::string& name, float value);
-	void setInt(std::string& name, int value);
-	void setBool(std::string& name, bool value);
 
 	inline unsigned int id() const { return m_id; }
-
 	inline void setFloat(std::string& name, float value) { if (!hasUniform(name)) return; glUniform1f(m_uniforms[name], value); }
 	inline void setInt(std::string& name, int value) {     if (!hasUniform(name)) return; glUniform1i(m_uniforms[name], value); }
 	inline void setBool(std::string& name, bool value) {   if (!hasUniform(name)) return; glUniform1ui(m_uniforms[name], value); }
