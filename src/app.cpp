@@ -1,4 +1,5 @@
 #include <glad/glad.h>
+#include <glm/glm.hpp>
 
 #include "util/log.h"
 #include "app.h"

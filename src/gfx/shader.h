@@ -22,6 +22,7 @@ public:
 	inline void setBool(const std::string& name, bool value) { if (!hasUniform(name)) return; glUniform1i(m_uniforms[name], value); }
 	inline void setVec2(const std::string& name, const glm::vec2& value) { if (!hasUniform(name)) return; glUniform2fv(m_uniforms[name], 1, glm::value_ptr(value)); }
 	inline void setVec3(const std::string& name, const glm::vec3& value) { if (!hasUniform(name)) return; glUniform3fv(m_uniforms[name], 1, glm::value_ptr(value)); }
+	inline void setVec4(const std::string& name, const glm::vec4& value) { if (!hasUniform(name)) return; glUniform4fv(m_uniforms[name], 1, glm::value_ptr(value)); }
 	inline void setMat2x2(const std::string& name, const glm::mat2x2& value) { if (!hasUniform(name)) return; glUniformMatrix2fv(m_uniforms[name], 1, GL_FALSE, glm::value_ptr(value)); }
 	inline void setMat3x3(const std::string& name, const glm::mat3x3& value) { if (!hasUniform(name)) return; glUniformMatrix3fv(m_uniforms[name], 1, GL_FALSE, glm::value_ptr(value)); }
 

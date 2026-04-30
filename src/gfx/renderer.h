@@ -1,19 +1,19 @@
 #pragma once
 #include <array>
 #include <memory>
+#include <glm/glm.hpp>
 
 #include "shader.h"
 
-using Color = std::array<float, 4>;
-static constexpr Color WHITE = { 1.0f, 1.0f, 1.0f, 1.0f };
+constexpr glm::vec4 WHITE(1.0f, 1.0f, 1.0f, 1.0f);
 
 struct Quad
 {
 	float m_x, m_y;
 	float m_width, m_height;
-	std::array<float, 4> m_color;
+	glm::vec4 m_color;
 
-	Quad(float x, float y, float width, float height, Color color = WHITE)
+	Quad(float x, float y, float width, float height, glm::vec4 color = WHITE)
 		: m_x(x), m_y(y), m_width(width), m_height(height), m_color(color)
 	{ }
 }; 
@@ -50,7 +50,7 @@ public:
 
 	inline void renderQuad(Quad& quad) { renderQuad(quad.m_x, quad.m_y, quad.m_width, quad.m_height, quad.m_color); };
 
-	void renderQuad(float x, float y, float width, float height, Color color = WHITE);
+	void renderQuad(float x, float y, float width, float height, const glm::vec4& color = WHITE);
 
 private:
 	std::array<std::unique_ptr<Shader>, static_cast<int>(ShaderType::N)> m_shaders;

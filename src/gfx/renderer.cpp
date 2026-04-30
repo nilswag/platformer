@@ -44,11 +44,14 @@ Renderer::Renderer()
 	log().debug("Renderer", "Initialized (OpenGL)");
 }
 
-void Renderer::renderQuad(float x, float y, float width, float height, Color color)
+void Renderer::renderQuad(float x, float y, float width, float height, const glm::vec4& color)
 {
 	for (int i = 0; i < static_cast<int>(ShaderType::N); i++)
 	{
-		(*m_shaders[i]).use();
+		Shader& shader = (*m_shaders[i]);
+		shader.use();
+		shader.setVec4("color", color);
+
 		glBindVertexArray(m_vaos[i]);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 	}
