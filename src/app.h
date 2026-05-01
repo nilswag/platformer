@@ -19,5 +19,5 @@ public:
 private:
 	Window m_window;
 	Renderer m_renderer;
-	double m_dt;
+	float m_dt;
 };

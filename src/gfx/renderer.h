@@ -2,18 +2,19 @@
 #include <array>
 #include <memory>
 #include <glm/glm.hpp>
+#include <glad/glad.h>
 
+#include "window.h"
 #include "shader.h"
 
-constexpr glm::vec4 WHITE(1.0f, 1.0f, 1.0f, 1.0f);
-
-constexpr glm::vec3 ROT_DIR = glm::vec3(0.0f, 0.0f, 1.0f);
+static const glm::vec3 ROT_DIR = glm::vec3(0.0f, 0.0f, 1.0f);
+static const glm::vec4 WHITE = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
 class Camera
 {
 public:
 	Camera()
-		: m_view(glm::mat4(1.0f)) { }
+		: m_view(1.0f) { }
 	~Camera() = default;
 
 	inline void move(const glm::vec2& pos)
@@ -41,7 +42,7 @@ struct Quad
 class Renderer
 {
 public:
-	Renderer();
+	Renderer(Window& window);
 	~Renderer() = default;
 
 	Renderer(const Renderer&) = delete;
@@ -77,5 +78,6 @@ public:
 private:
 	std::array<std::unique_ptr<Shader>, static_cast<int>(ShaderType::N)> m_shaders;
 	std::array<unsigned int, static_cast<int>(ShaderType::N)> m_vaos;
+	Window& m_window;
 	Camera m_camera;
 };

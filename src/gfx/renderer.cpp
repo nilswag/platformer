@@ -20,7 +20,8 @@ static int indices[] = {
 	1, 2, 3
 };
 
-Renderer::Renderer()
+Renderer::Renderer(Window& window)
+	: m_window(window)
 {
 	//m_camera.move(glm::vec2(0.5f, 0.0f));
 
@@ -64,7 +65,7 @@ void Renderer::renderQuad(const glm::vec2& pos, const glm::vec2& size, float rot
 		shader.setMat4("view", m_camera.view());
 
 		glm::mat4 proj(1.0f);
-		proj = glm::ortho(0.0f, 500.0f, 0.0f, 500.0f, 1.0f, 0.0f);
+		proj = glm::ortho(0.0f, static_cast<float>(m_window.width()), 0.0f, static_cast<float>(m_window.height()), 1.0f, 0.0f);
 		shader.setMat4("proj", proj);
 
 		glBindVertexArray(m_vaos[i]);

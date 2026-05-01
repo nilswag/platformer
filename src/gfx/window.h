@@ -21,7 +21,6 @@ public:
 	inline GLFWwindow* handle() const { return m_window; }
 
 private:
-
 	static void frameBufferSizeCallback(GLFWwindow* window, int width, int height);
 
 	GLFWwindow* m_window;
