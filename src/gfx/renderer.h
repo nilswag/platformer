@@ -8,7 +8,6 @@
 #include "shader.h"
 
 static const glm::vec3 ROT_DIR = glm::vec3(0.0f, 0.0f, 1.0f);
-static const glm::vec4 WHITE = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
 class Camera
 {
@@ -29,7 +28,16 @@ private:
 
 struct Quad
 {
-	Quad(const glm::vec2& pos, const glm::vec2& size, float rot, glm::vec4 color = WHITE)
+	Quad(const glm::vec2& pos, const glm::vec2& size)
+		: m_pos(pos), m_size(size), m_rot(0.0f), m_color(1.0f, 1.0f, 1.0f, 1.0f)
+	{ }
+
+	Quad(const glm::vec2& pos, const glm::vec2& size, float rot)
+		: m_pos(pos), m_size(size), m_rot(rot), m_color(1.0f, 1.0f, 1.0f, 1.0f)
+	{
+	}
+
+	Quad(const glm::vec2& pos, const glm::vec2& size, float rot, glm::vec4 color)
 		: m_pos(pos), m_size(size), m_rot(rot), m_color(color)
 	{ }
 
@@ -69,11 +77,9 @@ public:
 		return m_shaders[index].get();
 	}
 
-	inline void renderQuad(Quad& quad) { renderQuad(quad.m_pos, quad.m_size, quad.m_rot, quad.m_color); };
-	inline void renderQuad(const glm::vec2& pos, const glm::vec2& size) { renderQuad(pos, size, 0.0f); }
 	inline Camera& camera() { return m_camera; }
 
-	void renderQuad(const glm::vec2& pos, const glm::vec2& size, float rot, const glm::vec4& color = WHITE);
+	void renderQuad(const Quad& quad);
 
 private:
 	std::array<std::unique_ptr<Shader>, static_cast<int>(ShaderType::N)> m_shaders;

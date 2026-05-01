@@ -57,7 +57,7 @@ void App::run()
 		if (glfwGetKey(m_window.handle(), GLFW_KEY_S))
 			pos[1] -= vel;
 
-		m_renderer.renderQuad(pos, glm::vec2(100.0f, 100.0f));
+		m_renderer.renderQuad(Quad(pos, glm::vec2(100.0f, 100.0f)));
 
 		m_window.update();
 	}

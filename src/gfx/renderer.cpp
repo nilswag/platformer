@@ -48,18 +48,18 @@ Renderer::Renderer(Window& window)
 	log().debug("Renderer", "Initialized (OpenGL)");
 }
 
-void Renderer::renderQuad(const glm::vec2& pos, const glm::vec2& size, float rot, const glm::vec4& color)
+void Renderer::renderQuad(const Quad& quad)
 {
 	for (int i = 0; i < static_cast<int>(ShaderType::N); i++)
 	{
 		Shader& shader = (*m_shaders[i]);
 		shader.use();
-		shader.setVec4("color", color);
+		shader.setVec4("color", quad.m_color);
 
 		glm::mat4 model(1.0f);
-		model = glm::translate(model, glm::vec3(pos, 0.0f));
-		model = glm::rotate(model, glm::radians(rot), ROT_DIR);
-		model = glm::scale(model, glm::vec3(size, 1.0f));
+		model = glm::translate(model, glm::vec3(quad.m_pos, 0.0f));
+		model = glm::rotate(model, glm::radians(quad.m_rot), ROT_DIR);
+		model = glm::scale(model, glm::vec3(quad.m_size, 1.0f));
 		shader.setMat4("model", model);
 
 		shader.setMat4("view", m_camera.view());
