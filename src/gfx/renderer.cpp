@@ -55,7 +55,7 @@ void Renderer::renderQuad(float x, float y, float width, float height, float rot
 
 		glm::mat4 model(1.0f);
 		model = glm::translate(model, glm::vec3(x, y, 0.0f));
-		model = glm::rotate(model, glm::radians(rot), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::rotate(model, glm::radians(rot), ROT_DIR);
 		model = glm::scale(model, glm::vec3(width, height, 1.0f));
 		shader.setMat4("model", model);
 
