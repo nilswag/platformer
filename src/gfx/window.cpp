@@ -10,7 +10,7 @@ void Window::frameBufferSizeCallback(GLFWwindow* window, int width, int height)
 	Window* instance = static_cast<Window*>(glfwGetWindowUserPointer(window));
 	instance->m_width = width;
 	instance->m_height = height;
-	glViewport(0, 0, width, height);
+	//glViewport(0, 0, width, height);
 
 	log().debug("Window", "Resized to ({}, {})", width, height);
 }

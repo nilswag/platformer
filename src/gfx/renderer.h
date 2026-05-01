@@ -9,42 +9,34 @@ constexpr glm::vec4 WHITE(1.0f, 1.0f, 1.0f, 1.0f);
 
 constexpr glm::vec3 ROT_DIR = glm::vec3(0.0f, 0.0f, 1.0f);
 
-struct Quad
-{
-	float m_x, m_y;
-	float m_width, m_height;
-	float m_rot;
-	glm::vec4 m_color;
-
-	Quad(float x, float y, float width, float height, float rot, glm::vec4 color = WHITE)
-		: m_x(x), m_y(y), m_width(width), m_height(height), m_rot(rot), m_color(color)
-	{ }
-}; 
-
 class Camera
 {
 public:
-	Camera(int x, int y)
-		: m_view(glm::mat4(1.0f))
-	{ transform(x, y); lookAt(glm::vec2(0.0f, 0.0f)); }
+	Camera()
+		: m_view(glm::mat4(1.0f)) { }
 	~Camera() = default;
 
-	inline void lookAt(const glm::vec2& target)
+	inline void move(const glm::vec2& pos)
 	{
-		m_view = glm::lookAt(m_pos, glm::vec3(target, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	}
-
-	inline void transform(float x, float y, float rot = 0.0f)
-	{
-		m_view = glm::translate(m_view, glm::vec3(x, y, 0.0f));
-		m_view = glm::rotate(m_view, glm::radians(rot), ROT_DIR);
+		m_view = glm::translate(m_view, glm::vec3(pos, 1.0f));
 	}
 
 	inline const glm::mat4& view() const { return m_view; }
 private:
-	glm::vec3 m_pos;
 	glm::mat4 m_view;
 };
+
+struct Quad
+{
+	Quad(const glm::vec2& pos, const glm::vec2& size, float rot, glm::vec4 color = WHITE)
+		: m_pos(pos), m_size(size), m_rot(rot), m_color(color)
+	{ }
+
+	glm::vec2 m_pos;
+	glm::vec2 m_size;
+	float m_rot;
+	glm::vec4 m_color;
+}; 
 
 class Renderer
 {
@@ -76,10 +68,11 @@ public:
 		return m_shaders[index].get();
 	}
 
-	inline void renderQuad(Quad& quad) { renderQuad(quad.m_x, quad.m_y, quad.m_width, quad.m_height, quad.m_rot, quad.m_color); };
+	inline void renderQuad(Quad& quad) { renderQuad(quad.m_pos, quad.m_size, quad.m_rot, quad.m_color); };
+	inline void renderQuad(const glm::vec2& pos, const glm::vec2& size) { renderQuad(pos, size, 0.0f); }
 	inline Camera& camera() { return m_camera; }
 
-	void renderQuad(float x, float y, float width, float height, float rot, const glm::vec4& color = WHITE);
+	void renderQuad(const glm::vec2& pos, const glm::vec2& size, float rot, const glm::vec4& color = WHITE);
 
 private:
 	std::array<std::unique_ptr<Shader>, static_cast<int>(ShaderType::N)> m_shaders;

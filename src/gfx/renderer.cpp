@@ -22,6 +22,8 @@ static int indices[] = {
 
 Renderer::Renderer()
 {
+	//m_camera.move(glm::vec2(0.5f, 0.0f));
+
 	m_shaders = {
 		std::make_unique<Shader>(shaders::basic::vertex, shaders::basic::fragment, "Basic")
 	};
@@ -45,7 +47,7 @@ Renderer::Renderer()
 	log().debug("Renderer", "Initialized (OpenGL)");
 }
 
-void Renderer::renderQuad(float x, float y, float width, float height, float rot, const glm::vec4& color)
+void Renderer::renderQuad(const glm::vec2& pos, const glm::vec2& size, float rot, const glm::vec4& color)
 {
 	for (int i = 0; i < static_cast<int>(ShaderType::N); i++)
 	{
@@ -54,10 +56,16 @@ void Renderer::renderQuad(float x, float y, float width, float height, float rot
 		shader.setVec4("color", color);
 
 		glm::mat4 model(1.0f);
-		model = glm::translate(model, glm::vec3(x, y, 0.0f));
+		model = glm::translate(model, glm::vec3(pos, 0.0f));
 		model = glm::rotate(model, glm::radians(rot), ROT_DIR);
-		model = glm::scale(model, glm::vec3(width, height, 1.0f));
+		model = glm::scale(model, glm::vec3(size, 1.0f));
 		shader.setMat4("model", model);
+
+		shader.setMat4("view", m_camera.view());
+
+		glm::mat4 proj(1.0f);
+		proj = glm::ortho(0.0f, 500.0f, 0.0f, 500.0f, 1.0f, 0.0f);
+		shader.setMat4("proj", proj);
 
 		glBindVertexArray(m_vaos[i]);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);

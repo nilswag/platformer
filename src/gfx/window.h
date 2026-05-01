@@ -18,6 +18,7 @@ public:
 	inline bool shouldClose() const { return glfwWindowShouldClose(m_window); }
 	inline int width() const { return m_width; }
 	inline int height() const { return m_height; }
+	inline GLFWwindow* handle() const { return m_window; }
 
 private:
 
