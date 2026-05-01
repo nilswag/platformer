@@ -18,7 +18,7 @@ void App::run()
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		m_renderer.renderQuad(0.0f, 0.0f, 100.0f, 100.0f);
+		m_renderer.renderQuad(0.7f, 0.0f, 1.0f, 1.0f, glfwGetTime() * 100);
 
 		m_window.update();
 	}

@@ -23,8 +23,9 @@ public:
 	inline void setVec2(const std::string& name, const glm::vec2& value) { if (!hasUniform(name)) return; glUniform2fv(m_uniforms[name], 1, glm::value_ptr(value)); }
 	inline void setVec3(const std::string& name, const glm::vec3& value) { if (!hasUniform(name)) return; glUniform3fv(m_uniforms[name], 1, glm::value_ptr(value)); }
 	inline void setVec4(const std::string& name, const glm::vec4& value) { if (!hasUniform(name)) return; glUniform4fv(m_uniforms[name], 1, glm::value_ptr(value)); }
-	inline void setMat2x2(const std::string& name, const glm::mat2x2& value) { if (!hasUniform(name)) return; glUniformMatrix2fv(m_uniforms[name], 1, GL_FALSE, glm::value_ptr(value)); }
-	inline void setMat3x3(const std::string& name, const glm::mat3x3& value) { if (!hasUniform(name)) return; glUniformMatrix3fv(m_uniforms[name], 1, GL_FALSE, glm::value_ptr(value)); }
+	inline void setMat2(const std::string& name, const glm::mat2& value) { if (!hasUniform(name)) return; glUniformMatrix2fv(m_uniforms[name], 1, GL_FALSE, glm::value_ptr(value)); }
+	inline void setMat3(const std::string& name, const glm::mat3& value) { if (!hasUniform(name)) return; glUniformMatrix3fv(m_uniforms[name], 1, GL_FALSE, glm::value_ptr(value)); }
+	inline void setMat4(const std::string& name, const glm::mat4& value) { if (!hasUniform(name)) return; glUniformMatrix4fv(m_uniforms[name], 1, GL_FALSE, glm::value_ptr(value)); }
 
 private:
 	bool compileShader(int& id, std::string_view shaderSrc, unsigned int type) const;
@@ -32,7 +33,7 @@ private:
 	inline bool hasUniform(const std::string& name)
 	{
 		if (m_uniforms.contains(name)) return true;
-		log().warn(m_tag, "Uniform not found ({})", name);
+		log().err(m_tag, "Uniform not found: {}", name);
 		return false;
 	}
 

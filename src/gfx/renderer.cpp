@@ -1,5 +1,6 @@
 #include <glad/glad.h>
 #include <memory>
+#include <glm/glm.hpp>
 
 #include "util/log.h"
 #include "renderer.h"
@@ -8,15 +9,15 @@
 #include "shaders/basic.glsl.hpp"
 
 static float vertices[] = {
-	0.0f, 0.0f, 0.0f,
-	1.0f, 0.0f, 0.0f,
-	1.0f, 1.0f, 0.0f,
-	0.0f, 1.0f, 0.0f
+	-0.5f, -0.5f, 0.0f,
+	-0.5f,  0.5f, 0.0f,
+	 0.5f, -0.5f, 0.0f,
+	 0.5f,  0.5f, 0.0f,
 };
 
 static int indices[] = {
 	0, 1, 2,
-	0, 2, 3
+	1, 2, 3
 };
 
 Renderer::Renderer()
@@ -44,13 +45,19 @@ Renderer::Renderer()
 	log().debug("Renderer", "Initialized (OpenGL)");
 }
 
-void Renderer::renderQuad(float x, float y, float width, float height, const glm::vec4& color)
+void Renderer::renderQuad(float x, float y, float width, float height, float rot, const glm::vec4& color)
 {
 	for (int i = 0; i < static_cast<int>(ShaderType::N); i++)
 	{
 		Shader& shader = (*m_shaders[i]);
 		shader.use();
 		shader.setVec4("color", color);
+
+		glm::mat4 model(1.0f);
+		model = glm::translate(model, glm::vec3(x, y, 0.0f));
+		model = glm::rotate(model, glm::radians(rot), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::scale(model, glm::vec3(width, height, 1.0f));
+		shader.setMat4("model", model);
 
 		glBindVertexArray(m_vaos[i]);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);

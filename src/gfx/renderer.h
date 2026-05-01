@@ -11,10 +11,11 @@ struct Quad
 {
 	float m_x, m_y;
 	float m_width, m_height;
+	float m_rot;
 	glm::vec4 m_color;
 
-	Quad(float x, float y, float width, float height, glm::vec4 color = WHITE)
-		: m_x(x), m_y(y), m_width(width), m_height(height), m_color(color)
+	Quad(float x, float y, float width, float height, float rot, glm::vec4 color = WHITE)
+		: m_x(x), m_y(y), m_width(width), m_height(height), m_rot(rot), m_color(color)
 	{ }
 }; 
 
@@ -48,9 +49,9 @@ public:
 		return m_shaders[index].get();
 	}
 
-	inline void renderQuad(Quad& quad) { renderQuad(quad.m_x, quad.m_y, quad.m_width, quad.m_height, quad.m_color); };
+	inline void renderQuad(Quad& quad) { renderQuad(quad.m_x, quad.m_y, quad.m_width, quad.m_height, quad.m_rot, quad.m_color); };
 
-	void renderQuad(float x, float y, float width, float height, const glm::vec4& color = WHITE);
+	void renderQuad(float x, float y, float width, float height, float rot, const glm::vec4& color = WHITE);
 
 private:
 	std::array<std::unique_ptr<Shader>, static_cast<int>(ShaderType::N)> m_shaders;
