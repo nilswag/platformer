@@ -8,14 +8,14 @@
 #include "gfx/renderer.h"
 
 App::App()
-	: m_window(800, 800, "platformer"), m_renderer(m_window), m_dt(0.0f)
+	: m_window(1280, 720, "platformer"), m_renderer(m_window), m_dt(0.0f)
 { }
 
 void App::run()
 {
 	log().debug("App", "Loop start");
 
-	glm::vec2 pos(0.0f, 0.0f);
+	glm::vec2 pos(50.0f, 50.0f);
 
 	float timer = 0.0f;
 	float sum = 0.0f;
@@ -33,10 +33,12 @@ void App::run()
 		count++;
 		if (timer >= 1.0f)
 		{
-			timer = 0.0f;
 			float avgDt = sum / count;
 			float avgFps = 1.0f / avgDt;
+
+			timer = 0.0f;
 			sum = 0.0f;
+			count = 0;
 
 			log().info("App", "AVG FPS: {:<8} | AVG DT: {}ms", std::round(avgFps * 1e2f) / 1e2f, std::round(avgDt * 1e5f) / 1e2f);
 		}
@@ -44,7 +46,7 @@ void App::run()
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		float vel = 200.0f * m_dt;
+		float vel = 300.0f * m_dt;
 	
 		if (glfwGetKey(m_window.handle(), GLFW_KEY_A))
 			pos[0] -= vel;
