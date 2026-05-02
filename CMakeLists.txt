@@ -20,7 +20,3 @@ target_link_libraries(${PROJECT_NAME}
 	PRIVATE glad
 	PRIVATE glm
 )
-
-target_compile_definitions(${PROJECT_NAME} 
-	PRIVATE $<$<CONFIG:Debug>:_DEBUG>
-)
