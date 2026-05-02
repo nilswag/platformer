@@ -4,22 +4,21 @@
 struct Quad
 {
 	Quad(const glm::vec2& pos, const glm::vec2& size)
-		: m_pos(pos), m_size(size), m_rot(0.0f), m_color(1.0f, 1.0f, 1.0f, 1.0f)
-	{
-	}
+		: Quad(pos, size, 0.0f)
+	{ }
 
 	Quad(const glm::vec2& pos, const glm::vec2& size, float rot)
-		: m_pos(pos), m_size(size), m_rot(rot), m_color(1.0f, 1.0f, 1.0f, 1.0f)
-	{
-	}
+		: Quad(pos, size, rot, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f))
+	{ }
 
 	Quad(const glm::vec2& pos, const glm::vec2& size, float rot, glm::vec4 color)
-		: m_pos(pos), m_size(size), m_rot(rot), m_color(color)
+		:  m_color(color)
 	{
+		m_model = glm::translate(m_model, glm::vec3(pos, 0.0f));
+		m_model = glm::rotate(m_model, glm::radians(rot), glm::vec3(0.0f, 0.0f, 1.0f));
+		m_model = glm::scale(m_model, glm::vec3(size, 1.0f));
 	}
 
-	glm::vec2 m_pos;
-	glm::vec2 m_size;
-	float m_rot;
+	glm::mat4 m_model;
 	glm::vec4 m_color;
 };
