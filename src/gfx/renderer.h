@@ -3,49 +3,28 @@
 #include <memory>
 #include <glm/glm.hpp>
 #include <glad/glad.h>
+#include <vector>
 
 #include "window.h"
 #include "shader.h"
+#include "camera.h"
+#include "quad.h"
 
-static const glm::vec3 ROT_DIR = glm::vec3(0.0f, 0.0f, 1.0f);
-
-class Camera
+struct Pass
 {
-public:
-	Camera()
-		: m_view(1.0f) { }
-	~Camera() = default;
+	Pass(const Shader& shader);
+	~Pass();
 
-	inline void move(const glm::vec2& pos)
-	{
-		m_view = glm::translate(m_view, glm::vec3(pos, 1.0f));
-	}
-
-	inline const glm::mat4& view() const { return m_view; }
-private:
-	glm::mat4 m_view;
+	Shader m_shader;
+	unsigned int m_vao, m_ibo;
+	std::vector<Quad> m_queue;
 };
 
-struct Quad
+enum class PassType
 {
-	Quad(const glm::vec2& pos, const glm::vec2& size)
-		: m_pos(pos), m_size(size), m_rot(0.0f), m_color(1.0f, 1.0f, 1.0f, 1.0f)
-	{ }
-
-	Quad(const glm::vec2& pos, const glm::vec2& size, float rot)
-		: m_pos(pos), m_size(size), m_rot(rot), m_color(1.0f, 1.0f, 1.0f, 1.0f)
-	{
-	}
-
-	Quad(const glm::vec2& pos, const glm::vec2& size, float rot, glm::vec4 color)
-		: m_pos(pos), m_size(size), m_rot(rot), m_color(color)
-	{ }
-
-	glm::vec2 m_pos;
-	glm::vec2 m_size;
-	float m_rot;
-	glm::vec4 m_color;
-}; 
+	BASIC = 0,
+	N
+};
 
 class Renderer
 {
@@ -58,32 +37,18 @@ public:
 
 	Renderer(Renderer&&) = delete;
 	void operator=(Renderer&&) = delete;
-
-	enum class ShaderType
-	{
-		BASIC = 0,
-		N
-	};
-
-	inline Shader* getShader(ShaderType type) const
-	{
-		int index = static_cast<int>(type);
-		if (index < 0 || index >= m_shaders.size())
-		{
-			log().err("Renderer", "Invalid shader type: {}", static_cast<int>(type));
-			return nullptr;
-		}
-
-		return m_shaders[index].get();
-	}
-
-	inline Camera& camera() { return m_camera; }
-
-	void renderQuad(const Quad& quad);
+	
+	void updateCamera(const glm::vec2& pos, const PassType& type);
+	void updateCamera(const PassType& type) const;
+	void renderQuad(const Quad& quad, const PassType& type);
+	void flushPass(const PassType& type);
+	void begin() const;
+	void flush();
 
 private:
-	std::array<std::unique_ptr<Shader>, static_cast<int>(ShaderType::N)> m_shaders;
-	std::array<unsigned int, static_cast<int>(ShaderType::N)> m_vaos;
 	Window& m_window;
 	Camera m_camera;
+	unsigned int m_vao;
+
+	std::array<std::unique_ptr<Pass>, static_cast<int>(PassType::N)> m_passes;
 };

@@ -24,6 +24,9 @@ void App::run()
 	auto last = std::chrono::high_resolution_clock::now();
 	while (!m_window.shouldClose())
 	{
+
+		// =======================================================
+
 		auto now = std::chrono::high_resolution_clock::now();
 		m_dt = std::chrono::duration<float>(now - last).count();
 		last = now;
@@ -43,11 +46,10 @@ void App::run()
 			log().info("App", "AVG FPS: {:<8} | AVG DT: {}ms", std::round(avgFps * 1e2f) / 1e2f, std::round(avgDt * 1e5f) / 1e2f);
 		}
 
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		// =======================================================
 
 		float vel = 300.0f * m_dt;
-	
+
 		if (glfwGetKey(m_window.handle(), GLFW_KEY_A))
 			pos[0] -= vel;
 		if (glfwGetKey(m_window.handle(), GLFW_KEY_D))
@@ -57,8 +59,15 @@ void App::run()
 		if (glfwGetKey(m_window.handle(), GLFW_KEY_S))
 			pos[1] -= vel;
 
-		m_renderer.renderQuad(Quad(pos, glm::vec2(100.0f, 100.0f)));
+		// =======================================================
 
+		m_renderer.begin();
+
+		m_renderer.renderQuad(Quad(pos, glm::vec2(100.0f, 100.0f)), PassType::BASIC);
+		m_renderer.renderQuad(Quad(pos + glm::vec2(20.0f, 20.0f), glm::vec2(100.0f, 100.0f)), PassType::BASIC);
+		m_renderer.updateCamera(PassType::BASIC);
+
+		m_renderer.flush();
 		m_window.update();
 	}
 

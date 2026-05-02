@@ -20,55 +20,101 @@ static int indices[] = {
 	1, 2, 3
 };
 
+static const int MAX_INSTANCES = 1024;
+static const int INSTANCE_SIZE = sizeof(glm::vec4) + sizeof(glm::mat4);
+
+Pass::Pass(const Shader& shader)
+	: m_shader(shader)
+{
+	glGenVertexArrays(1, &m_vao);
+	glBindVertexArray(m_vao);
+
+	glGenBuffers(1, &m_ibo);
+	glBindBuffer(GL_ARRAY_BUFFER, m_ibo);
+	glBufferData(GL_ARRAY_BUFFER, MAX_INSTANCES * INSTANCE_SIZE, nullptr, GL_DYNAMIC_DRAW);
+	
+	for (int i = 0; i < 4; i++)
+	{
+		// model matrix
+		glVertexAttribPointer(1 + i, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4) * i));
+		glVertexAttribDivisor(1 + i, 1);
+		glEnableVertexAttribArray(1 + i);
+	}
+
+	// color
+	glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)sizeof(glm::mat4));
+}
+
+Pass::~Pass()
+{
+	glDeleteBuffers(1, &m_ibo);
+	glDeleteVertexArrays(1, &m_vao);
+}
+
 Renderer::Renderer(Window& window)
 	: m_window(window)
 {
-	//m_camera.move(glm::vec2(0.5f, 0.0f));
-
-	m_shaders = {
-		std::make_unique<Shader>(shaders::basic::vertex, shaders::basic::fragment, "Basic")
-	};
-
-	glGenVertexArrays(static_cast<int>(ShaderType::N), m_vaos.data());
-	glBindVertexArray(m_vaos[static_cast<int>(ShaderType::BASIC)]);
-
-	unsigned int vbo, ebo;
+	glGenVertexArrays(1, &m_vao);
+	glBindVertexArray(m_vao);
+	
+	unsigned int vbo;
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
-	glEnableVertexAttribArray(0);
 
+	unsigned int ebo;
 	glGenBuffers(1, &ebo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	glBindVertexArray(0);
+	m_passes = {
+		std::make_unique<Pass>(Shader(shaders::basic::vertex, shaders::basic::fragment, "Basic"))
+	};
 		
 	log().debug("Renderer", "Initialized (OpenGL)");
 }
 
-void Renderer::renderQuad(const Quad& quad)
+void Renderer::updateCamera(const glm::vec2& pos, const PassType& type)
 {
-	for (int i = 0; i < static_cast<int>(ShaderType::N); i++)
-	{
-		Shader& shader = (*m_shaders[i]);
-		shader.use();
-		shader.setVec4("color", quad.m_color);
+	m_camera.move(pos);
+	updateCamera(type);
+}
 
-		glm::mat4 model(1.0f);
-		model = glm::translate(model, glm::vec3(quad.m_pos, 0.0f));
-		model = glm::rotate(model, glm::radians(quad.m_rot), ROT_DIR);
-		model = glm::scale(model, glm::vec3(quad.m_size, 1.0f));
-		shader.setMat4("model", model);
+void Renderer::updateCamera(const PassType& type) const
+{
+	glm::mat4 proj = glm::ortho(0.0f, static_cast<float>(m_window.width()), 0.0f, static_cast<float>(m_window.height()));
+	glm::mat4 view = m_camera.view();
+	Shader& shader = (*m_passes[static_cast<int>(type)]).m_shader;
+	shader.setMat4("proj", proj);
+	shader.setMat4("view", view);
+}
 
-		shader.setMat4("view", m_camera.view());
+void Renderer::renderQuad(const Quad& quad, const PassType& type)
+{
+	Pass& pass = *m_passes[static_cast<int>(type)];
+	if (pass.m_queue.size() >= MAX_INSTANCES) flushPass(type);
 
-		glm::mat4 proj(1.0f);
-		proj = glm::ortho(0.0f, static_cast<float>(m_window.width()), 0.0f, static_cast<float>(m_window.height()), 1.0f, 0.0f);
-		shader.setMat4("proj", proj);
+}
 
-		glBindVertexArray(m_vaos[i]);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-	}
+void Renderer::flushPass(const PassType& type)
+{
+	Pass& pass = *m_passes[static_cast<int>(type)];
+	if (pass.m_queue.empty()) return;
+
+	glBindVertexArray(pass.m_vao);
+	pass.m_shader.use();
+
+	glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, indices, pass.m_queue.size());
+}
+
+void Renderer::begin() const
+{
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+}
+
+void Renderer::flush()
+{
+	for (int i = 0; i < m_passes.size(); i++) flushPass(static_cast<PassType>(i));
 }
