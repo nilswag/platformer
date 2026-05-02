@@ -7,7 +7,6 @@ public:
 	Camera()
 		: m_view(1.0f) {
 	}
-	~Camera() = default;
 
 	inline void move(const glm::vec2& pos)
 	{
