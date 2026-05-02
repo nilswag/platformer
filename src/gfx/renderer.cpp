@@ -8,11 +8,13 @@
 
 #include "shaders/basic.glsl.hpp"
 
-static float vertices[] = {
-	-0.5f, -0.5f, 0.0f,
-	-0.5f,  0.5f, 0.0f,
-	 0.5f, -0.5f, 0.0f,
-	 0.5f,  0.5f, 0.0f,
+// ===============================================================================
+
+static glm::vec3 vertices[] = {
+	{ -0.5f, -0.5f, 0.0f },
+	{ -0.5f,  0.5f, 0.0f },
+	{  0.5f, -0.5f, 0.0f },
+	{  0.5f,  0.5f, 0.0f },
 };
 
 static int indices[] = {
@@ -23,6 +25,7 @@ static int indices[] = {
 static const int MAX_INSTANCES = 1024;
 static const int INSTANCE_SIZE = sizeof(glm::vec4) + sizeof(glm::mat4);
 
+// ===============================================================================
 
 Pass::Pass(const Shader& shader)
 	: m_shader(shader)
@@ -30,16 +33,29 @@ Pass::Pass(const Shader& shader)
 	
 }
 
-
 Pass::~Pass()
 {
 
 }
 
+// ===============================================================================
 
 Renderer::Renderer(Window& window)
-	: m_window(window)
+	: m_window(window), m_vao(0)
 {
+	glGenVertexArrays(1, &m_vao);
+	glBindVertexArray(m_vao);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), nullptr);
+	
+	unsigned int vbo, ebo;
+	glGenBuffers(1, &vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glGenBuffers(1, &ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
 	m_passes = {
 		std::make_unique<Pass>(Shader(shaders::basic::vertex, shaders::basic::fragment, "Basic"))
 	};
@@ -47,13 +63,11 @@ Renderer::Renderer(Window& window)
 	log().debug("Renderer", "Initialized (OpenGL)");
 }
 
-
 void Renderer::updateCamera(const glm::vec2& pos, const PassType& type)
 {
 	m_camera.move(pos);
 	updateCamera(type);
 }
-
 
 void Renderer::updateCamera(const PassType& type) const
 {
@@ -64,7 +78,6 @@ void Renderer::updateCamera(const PassType& type) const
 	shader.setMat4("view", view);
 }
 
-
 void Renderer::renderQuad(const Quad& quad, const PassType& type)
 {
 	Pass& pass = *m_passes[static_cast<int>(type)];
@@ -72,19 +85,16 @@ void Renderer::renderQuad(const Quad& quad, const PassType& type)
 
 }
 
-
 void Renderer::flushPass(const PassType& type)
 {
 
 }
-
 
 void Renderer::begin() const
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 }
-
 
 void Renderer::flush()
 {

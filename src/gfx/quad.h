@@ -14,10 +14,11 @@ struct Quad
 	Quad(const glm::vec2& pos, const glm::vec2& size, float rot, glm::vec4 color)
 		:  m_color(color)
 	{
-		m_model = glm::mat4(1.0f);
-		m_model = glm::translate(m_model, glm::vec3(pos, 0.0f));
-		m_model = glm::rotate(m_model, glm::radians(rot), glm::vec3(0.0f, 0.0f, 1.0f));
-		m_model = glm::scale(m_model, glm::vec3(size, 1.0f));
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(pos, 0.0f));
+		model = glm::rotate(model, glm::radians(rot), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::scale(model, glm::vec3(size, 1.0f));
+		m_model = model;
 	}
 
 	glm::mat4 m_model;

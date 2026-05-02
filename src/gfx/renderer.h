@@ -16,7 +16,7 @@ struct Pass
 	~Pass();
 
 	Shader m_shader;
-	unsigned int m_vao, m_ibo;
+	unsigned int m_iVbo;
 	std::vector<Quad> m_queue;
 };
 
