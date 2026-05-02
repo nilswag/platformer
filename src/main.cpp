@@ -1,16 +1,7 @@
-#include "util/log.h"
-#include "app.h"
+#include <print>
 
 int main()
 {
-#ifdef _DEBUG
-	log().setLevel(LogLevel::TRACE);
-#else
-	log().setLevel(LogLevel::FATAL);
-#endif
-
-	App app;
-	app.run();
-
+	std::println("Hello World!");
 	return 0;
 }
