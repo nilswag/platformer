@@ -5,10 +5,9 @@
 
 #include "util/log.h"
 #include "app.h"
-#include "gfx/renderer.h"
 
 App::App()
-	: m_window(1280, 720, "platformer"), m_renderer(m_window), m_dt(0.0f)
+	: m_window(1280, 720, "platformer"), m_dt(0.0f)
 { }
 
 void App::run()

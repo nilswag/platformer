@@ -4,7 +4,6 @@
 
 #include "util/log.h"
 #include "window.h"
-#include "renderer.h"
 
 void Window::frameBufferSizeCallback(GLFWwindow* window, int width, int height)
 {

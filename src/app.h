@@ -1,5 +1,4 @@
 #pragma once
-#include "gfx/renderer.h"
 #include "gfx/window.h"
 
 class App
@@ -18,6 +17,5 @@ public:
 
 private:
 	Window m_window;
-	Renderer m_renderer;
 	float m_dt;
 };
