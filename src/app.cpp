@@ -60,14 +60,6 @@ void App::run()
 			pos[1] -= vel;
 
 		// =======================================================
-
-		m_renderer.begin();
-
-		m_renderer.renderQuad(Quad(pos, glm::vec2(100.0f, 100.0f)), PassType::BASIC);
-		m_renderer.renderQuad(Quad(pos + glm::vec2(20.0f, 20.0f), glm::vec2(100.0f, 100.0f)), PassType::BASIC);
-		m_renderer.updateCamera(PassType::BASIC);
-
-		m_renderer.flush();
 		m_window.update();
 	}
 
