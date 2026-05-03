@@ -1,14 +1,15 @@
 #include <spdlog/spdlog.h>
 
-#include "gfx/window.h"
+#include "app.h"
 
 int main()
 {
 #ifdef _DEBUG
-	spdlog::set_level(spdlog::level::debug);
+	spdlog::set_level(spdlog::level::trace);
 #endif
 
-	Window window(800, 800, "platformer");
+	App app;
+	app.run();
 
 	return 0;
 }

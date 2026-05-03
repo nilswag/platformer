@@ -9,7 +9,7 @@ add_subdirectory(third_party/glad)
 add_subdirectory(third_party/glm)
 add_subdirectory(third_party/spdlog)
 
-file(GLOB_RECURSE SOURCES src/*.cpp src/*.hpp)
+file(GLOB_RECURSE SOURCES src/*.cpp)
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_include_directories(${PROJECT_NAME}

@@ -56,4 +56,5 @@ Window::~Window()
 {
 	glfwDestroyWindow(m_window);
 	glfwTerminate();
+	spdlog::debug("Window deinitialized");
 }
