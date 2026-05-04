@@ -1,7 +1,7 @@
 #include <spdlog/spdlog.h>
 
 #include "app.h"
-#include "math/vec.h"
+#include "math/math.h"
 
 int main()
 {
