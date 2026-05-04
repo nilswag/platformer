@@ -3,13 +3,14 @@
 #include <vector>
 #include <spdlog/spdlog.h>
 
+#include "../math/mat.h"
 #include "shader.h"
 
 GLuint Shader::compileShader(const std::string& src, GLenum type)
 {
 	GLuint id = glCreateShader(type);
 	const GLchar* srcStr = static_cast<const GLchar*>(src.c_str());
-	glShaderSource(id, 1, &srcStr, src.length());
+	glShaderSource(id, 1, &srcStr, nullptr);
 	glCompileShader(id);
 
 	std::string tag = "N/A";
@@ -34,10 +35,10 @@ GLuint Shader::compileShader(const std::string& src, GLenum type)
 
 		glGetShaderInfoLog(id, log.size(), nullptr, log.data());
 		
-		spdlog::error("Unable to compile shader ({}, {}): {}", id, tag, log);
+		spdlog::error("Unable to compile shader ({}:{}) : {}", m_tag, tag, log);
 	}
 
-	spdlog::trace("Compiled shader ({}, {})", id, type);
+	spdlog::trace("Compiled shader ({}:{})", m_tag, tag);
 	return id;
 }
 
@@ -52,17 +53,17 @@ Shader::Shader(const std::string& vertexSrc, const std::string& fragmentSrc, con
 	glAttachShader(fragmentShader, GL_FRAGMENT_SHADER);
 
 	GLint success;
-	glGetProgramiv(id, GL_LINK_STATUS, &success);
+	glGetProgramiv(m_id, GL_LINK_STATUS, &success);
 	if (!success)
 	{
 		std::vector<GLchar> log;
 		GLint logLength;
-		glGetProgramiv(id, GL_INFO_LOG_LENGTH, &logLength);
+		glGetProgramiv(m_id, GL_INFO_LOG_LENGTH, &logLength);
 		log.resize(logLength);
 
-		glGetProgramInfoLog(id, log.size(), nullptr, log.data());
+		glGetProgramInfoLog(m_id, log.size(), nullptr, log.data());
 
-		spdlog::error("Unable to linik shader program ({}): {}", id, log);
+		spdlog::error("Unable to linik shader program ({}): {}", m_id, log);
 	}
 
 	glDeleteShader(vertexShader);
@@ -72,4 +73,58 @@ Shader::Shader(const std::string& vertexSrc, const std::string& fragmentSrc, con
 Shader::~Shader()
 {
 	glDeleteProgram(m_id);
+}
+
+void Shader::setVec2(const std::string& name, const Vec2& value) const
+{
+	if (!hasUniform(name)) return;
+	glUniform2iv(m_uniforms.at(name), 1, value.data);
+}
+
+void Shader::setVec3(const std::string& name, const Vec3& value) const
+{
+	if (!hasUniform(name)) return;
+	glUniform3iv(m_uniforms.at(name), 1, value.data);
+}
+
+void Shader::setVec4(const std::string& name, const Vec4& value) const
+{
+	if (!hasUniform(name)) return;
+	glUniform4iv(m_uniforms.at(name), 1, value.data);
+}
+
+void Shader::setVec2f(const std::string& name, const Vec2f& value) const
+{
+	if (!hasUniform(name)) return;
+	glUniform2fv(m_uniforms.at(name), 1, value.data);
+}
+
+void Shader::setVec3f(const std::string& name, const Vec3f& value) const
+{
+	if (!hasUniform(name)) return;
+	glUniform3fv(m_uniforms.at(name), 1, value.data);
+}
+
+void Shader::setVec4f(const std::string& name, const Vec4f& value) const
+{
+	if (!hasUniform(name)) return;
+	glUniform4fv(m_uniforms.at(name), 1, value.data);
+}
+
+void Shader::setMat2f(const std::string& name, const Mat2f& value) const
+{
+	if (!hasUniform(name)) return;
+	glUniformMatrix2fv(m_uniforms.at(name), 1, GL_FALSE, value[0].data);
+}
+
+void Shader::setMat3f(const std::string& name, const Mat3f& value) const
+{
+	if (!hasUniform(name)) return;
+	glUniformMatrix3fv(m_uniforms.at(name), 1, GL_FALSE, value[0].data);
+}
+
+void Shader::setMat4f(const std::string& name, const Mat4f& value) const
+{
+	if (!hasUniform(name)) return;
+	glUniformMatrix4fv(m_uniforms.at(name), 1, GL_FALSE, value[0].data);
 }
