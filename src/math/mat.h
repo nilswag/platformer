@@ -46,7 +46,7 @@ inline Mat<T, R1, C2> operator*(const Mat<T, R1, C1>& a, const Mat<T, C1, C2>& b
 				result[i][j] += a[k][j] * b[i][k];
 	return result;
 }
-
+	
 template <typename T, size_t R, size_t C, typename X>
 inline Mat<T, R, C> operator*(const Mat<T, R, C>& a, const X& x)
 {

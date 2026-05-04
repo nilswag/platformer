@@ -35,14 +35,6 @@ inline Vec<T, N> operator+(const Vec<T, N>& a, const Vec<T, N>& b)
 	return result;
 }
 
-template<typename T, size_t N, typename X>
-inline Vec<T, N> operator+(const Vec<T, N>& a, const X& x)
-{
-	Vec<T, N> result = a;
-	result *= x;
-	return result;
-}
-
 template<typename T, size_t N>
 T dot(const Vec<T, N>& a, const Vec<T, N>& b)
 {
