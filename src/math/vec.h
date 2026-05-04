@@ -1,4 +1,5 @@
 #pragma once
+#include <type_traits>
 
 template<typename T, size_t N>
 struct Vec {
@@ -14,6 +15,15 @@ struct Vec {
 			data[i] += other.data[i];
 		return *this;
 	}
+
+	template <typename X>
+	inline Vec<T, N>& operator*=(const X& x)
+	{
+		static_assert(std::is_arithmetic_v<X>, "Vector scalar multiplication without numeric scalar");
+		for (size_t i = 0; i < N; i++)
+			data[i] *= x;
+		return *this;
+	}
 };
 
 template<typename T, size_t N>
@@ -22,6 +32,14 @@ inline Vec<T, N> operator+(const Vec<T, N>& a, const Vec<T, N>& b)
 	Vec<T, N> result = {};
 	result += a;
 	result += b;
+	return result;
+}
+
+template<typename T, size_t N, typename X>
+inline Vec<T, N> operator+(const Vec<T, N>& a, const X& x)
+{
+	Vec<T, N> result = a;
+	result *= x;
 	return result;
 }
 

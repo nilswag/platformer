@@ -1,4 +1,5 @@
 #pragma once
+#include <type_traits>
 #include "vec.h"
 
 template <typename T, size_t R, size_t C>
@@ -14,6 +15,14 @@ struct Mat
 	{
 		for (size_t i = 0; i < C; i++)
 			data[i] += other[i];
+		return *this;
+	}
+
+	template<typename X>
+	inline Mat<T, R, C>& operator*=(const X& x)
+	{
+		for (size_t i = 0; i < C; i++)
+			data[i] *= x;
 		return *this;
 	}
 };
@@ -35,6 +44,14 @@ inline Mat<T, R1, C2> operator*(const Mat<T, R1, C1>& a, const Mat<T, C1, C2>& b
 		for (size_t j = 0; j < R1; j++)
 			for (size_t k = 0; k < C1; k++)
 				result[i][j] += a[k][j] * b[i][k];
+	return result;
+}
+
+template <typename T, size_t R, size_t C, typename X>
+inline Mat<T, R, C> operator*(const Mat<T, R, C>& a, const X& x)
+{
+	Mat<T, R, C> result = a;
+	result *= x;
 	return result;
 }
 
