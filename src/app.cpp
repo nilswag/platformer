@@ -3,14 +3,10 @@
 #include <spdlog/spdlog.h>
 
 #include "app.h"
-#include "gfx/shader.h"
-#include "util/io.h"
 
 App::App()
 	: m_window(1280, 720, "platformer"), m_dt(0.0f)
-{
-	Shader test = Shader(readFile("resources/shaders/basic/vertex.glsl"), readFile("resources/shaders/basic/fragment.glsl"), "Test");
-}
+{ }
 
 void App::run()
 {

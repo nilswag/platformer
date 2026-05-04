@@ -9,7 +9,7 @@
 class Shader
 {
 public:
-	Shader(const std::string& vertexSrc, const std::string& fragmentSrc, const std::string& tag);
+	Shader(const std::string& vertexPath, const std::string& fragmentPath, const std::string& tag);
 	~Shader();
 
 	inline GLuint getId() const { return m_id; }

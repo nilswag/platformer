@@ -4,6 +4,7 @@
 
 #include "../math/mat.h"
 #include "shader.h"
+#include "../util/io.h"
 
 GLuint Shader::compileShader(const std::string& src, GLenum type)
 {
@@ -22,6 +23,9 @@ GLuint Shader::compileShader(const std::string& src, GLenum type)
 		tag = "Fragment";
 		break;
 	}
+
+	if (src == "")
+		spdlog::warn("Compiling shader with empty src ({}:{})", m_tag, tag);
 
 	GLint success;
 	glGetShaderiv(id, GL_COMPILE_STATUS, &success);
@@ -42,21 +46,12 @@ GLuint Shader::compileShader(const std::string& src, GLenum type)
 	return id;
 }
 
-Shader::Shader(const std::string& vertexSrc, const std::string& fragmentSrc, const std::string& tag)
+Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath, const std::string& tag)
 	: m_id(0), m_tag(tag)
 {
-	if (vertexSrc == "")
-	{
-		spdlog::warn("Vertex shader source empty ({})", m_tag);
-		return;
-	}
-
-	if (fragmentSrc == "")
-	{
-		spdlog::warn("Fragment shader source empty ({})", m_tag);
-		return;
-	}
-
+	std::string vertexSrc = readFile(vertexPath);
+	std::string fragmentSrc = readFile(fragmentPath);
+	
 	GLuint vertexShader = compileShader(vertexSrc, GL_VERTEX_SHADER);
 	GLuint fragmentShader = compileShader(fragmentSrc, GL_FRAGMENT_SHADER);
 	
