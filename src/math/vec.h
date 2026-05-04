@@ -1,27 +1,37 @@
 #pragma once
 
-template<typename T, int N>
+template<typename T, size_t N>
 struct Vec {
 	T data[N];
 
-	inline T& operator[](int i) { return data[i]; }
+	inline T& operator[](size_t i) { return data[i]; }
 
-	inline const T& operator[](int i) const { return data[i]; }
+	inline const T& operator[](size_t i) const { return data[i]; }
 
 	inline Vec<T, N> operator+(const Vec<T, N>& other) const
 	{
-		Vec<T, N> result;
-		for (int i = 0; i < N; i++)
+		Vec<T, N> result = {};
+		for (size_t i = 0; i < N; i++)
 			result.data[i] = data[i] + other.data[i];
 		return result;
 	}
 
 	inline Vec<T, N> operator+=(const Vec<T, N>& other)
 	{
-		for (int i = 0; i < N; i++)
+		for (size_t i = 0; i < N; i++)
 			data[i] += other.data[i];
+		return *this;
 	}
 };
+
+template<typename T, size_t N>
+T dot(const Vec<T, N>& a, const Vec<T, N>& b)
+{
+	T result = {};
+	for (size_t i = 0; i < N; i++)
+		result += a[i] * b[i];
+	return result;
+}
 
 using Vec2 = Vec<int, 2>;
 using Vec3 = Vec<int, 3>;
