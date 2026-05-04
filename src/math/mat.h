@@ -21,6 +21,7 @@ struct Mat
 	template<typename X>
 	inline Mat<T, R, C>& operator*=(const X& x)
 	{
+		static_assert(std::is_arithmetic_v<X>, "Matrix scalar multiplication without numeric scalar");
 		for (size_t i = 0; i < C; i++)
 			data[i] *= x;
 		return *this;
@@ -67,6 +68,7 @@ inline Mat<T, R1, C2> operator*(const Mat<T, R1, C1>& a, const Mat<T, C1, C2>& b
 template <typename T, size_t R, size_t C, typename X>
 inline Mat<T, R, C> operator*(const Mat<T, R, C>& a, const X& x)
 {
+	static_assert(std::is_arithmetic_v<X>, "Vector scalar multiplication without numeric scalar");
 	Mat<T, R, C> result = a;
 	result *= x;
 	return result;
