@@ -29,11 +29,11 @@ void App::run()
 		{
 			float avgDt = sum / count;
 			float avgFps = 1.0f / avgDt;
-			spdlog::info("Avg fps: {:.1f} | Avg dt: {:.2f}ms", avgFps, avgDt * 1e3);
+			spdlog::info("Avg fps: {:<6.1f} | Avg dt: {:.2f}ms", avgFps, avgDt * 1e3);
 
 			sum = 0.0f;
 			count = 0;
-			timer = 0.0f;
+			timer -= 1.0f;
 		}
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
