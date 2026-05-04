@@ -25,7 +25,24 @@ struct Mat
 			data[i] *= x;
 		return *this;
 	}
+
+	static inline Mat<T, C, R> identity()
+	{
+		Mat<T, C, R> result = {};
+		for (size_t i = 0; i < C; i++)
+			for (size_t j = 0; j < R; j++)
+				result[i][j] = (i == j);
+		return result;
+	}
 };
+
+using Mat2 = Mat<int, 2, 2>;
+using Mat3 = Mat<int, 3, 3>;
+using Mat4 = Mat<int, 4, 4>;
+
+using Mat2f = Mat<float, 2, 2>;
+using Mat3f = Mat<float, 3, 3>;
+using Mat4f = Mat<float, 4, 4>;
 
 template<typename T, size_t R, size_t C>
 inline Mat<T, R, C> operator+(const Mat<T, R, C>& a, const Mat<T, R, C>& b)
@@ -54,11 +71,3 @@ inline Mat<T, R, C> operator*(const Mat<T, R, C>& a, const X& x)
 	result *= x;
 	return result;
 }
-
-using Mat2 = Mat<int, 2, 2>;
-using Mat3 = Mat<int, 3, 3>;
-using Mat4 = Mat<int, 4, 4>;
-
-using Mat2f = Mat<float, 2, 2>;
-using Mat3f = Mat<float, 3, 3>;
-using Mat4f = Mat<float, 4, 4>;

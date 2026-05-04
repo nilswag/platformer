@@ -26,6 +26,14 @@ struct Vec {
 	}
 };
 
+using Vec2 = Vec<int, 2>;
+using Vec3 = Vec<int, 3>;
+using Vec4 = Vec<int, 4>;
+
+using Vec2f = Vec<float, 2>;
+using Vec3f = Vec<float, 3>;
+using Vec4f = Vec<float, 4>;
+
 template<typename T, size_t N>
 inline Vec<T, N> operator+(const Vec<T, N>& a, const Vec<T, N>& b)
 {
@@ -43,11 +51,3 @@ T dot(const Vec<T, N>& a, const Vec<T, N>& b)
 		result += a[i] * b[i];
 	return result;
 }
-
-using Vec2 = Vec<int, 2>;
-using Vec3 = Vec<int, 3>;
-using Vec4 = Vec<int, 4>;
-
-using Vec2f = Vec<float, 2>;
-using Vec3f = Vec<float, 3>;
-using Vec4f = Vec<float, 4>;

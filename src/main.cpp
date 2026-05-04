@@ -8,7 +8,6 @@ int main()
 #ifdef _DEBUG
 	spdlog::set_level(spdlog::level::trace);
 #endif
-
 	App app;
 	app.run();
 
