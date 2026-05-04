@@ -9,6 +9,13 @@ add_subdirectory(third_party/glad)
 add_subdirectory(third_party/spdlog)
 
 file(GLOB_RECURSE SOURCES src/*.cpp)
+
+file(CREATE_LINK
+	${CMAKE_SOURCE_DIR}/resources
+	${CMAKE_BINARY_DIR}/resources
+	SYMBOLIC
+)
+
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_include_directories(${PROJECT_NAME}

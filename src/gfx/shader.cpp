@@ -1,6 +1,5 @@
 #include <string>
 #include <glad/glad.h>
-#include <vector>
 #include <spdlog/spdlog.h>
 
 #include "../math/mat.h"
@@ -28,14 +27,15 @@ GLuint Shader::compileShader(const std::string& src, GLenum type)
 	glGetShaderiv(id, GL_COMPILE_STATUS, &success);
 	if (!success)
 	{
-		std::vector<GLchar> log;
-		GLint logLength;
-		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &logLength);
-		log.resize(logLength);
+		std::string log;
+		GLint length;
+		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
+		log.resize(length);
 
 		glGetShaderInfoLog(id, log.size(), nullptr, log.data());
 		
-		spdlog::error("Unable to compile shader ({}:{}) : {}", m_tag, tag, log);
+		spdlog::error("Unable to compile shader ({}:{}):\n{}", m_tag, tag, log);
+		return id;
 	}
 
 	spdlog::trace("Compiled shader ({}:{})", m_tag, tag);
@@ -43,27 +43,40 @@ GLuint Shader::compileShader(const std::string& src, GLenum type)
 }
 
 Shader::Shader(const std::string& vertexSrc, const std::string& fragmentSrc, const std::string& tag)
-	: m_tag(tag)
+	: m_id(0), m_tag(tag)
 {
+	if (vertexSrc == "")
+	{
+		spdlog::warn("Vertex shader source empty ({})", m_tag);
+		return;
+	}
+
+	if (fragmentSrc == "")
+	{
+		spdlog::warn("Fragment shader source empty ({})", m_tag);
+		return;
+	}
+
 	GLuint vertexShader = compileShader(vertexSrc, GL_VERTEX_SHADER);
 	GLuint fragmentShader = compileShader(fragmentSrc, GL_FRAGMENT_SHADER);
 	
 	m_id = glCreateProgram();
-	glAttachShader(vertexShader, GL_VERTEX_SHADER);
-	glAttachShader(fragmentShader, GL_FRAGMENT_SHADER);
+	glAttachShader(m_id, vertexShader);
+	glAttachShader(m_id, fragmentShader);
+	glLinkProgram(m_id);
 
 	GLint success;
 	glGetProgramiv(m_id, GL_LINK_STATUS, &success);
 	if (!success)
 	{
-		std::vector<GLchar> log;
-		GLint logLength;
-		glGetProgramiv(m_id, GL_INFO_LOG_LENGTH, &logLength);
-		log.resize(logLength);
+		GLint length;
+		glGetProgramiv(m_id, GL_INFO_LOG_LENGTH, &length);
+		std::string log;
+		log.resize(length);
 
 		glGetProgramInfoLog(m_id, log.size(), nullptr, log.data());
 
-		spdlog::error("Unable to linik shader program ({}): {}", m_id, log);
+		spdlog::error("Unable to link shader program ({}):\n{}", m_id, log);
 	}
 
 	glDeleteShader(vertexShader);
