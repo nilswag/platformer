@@ -12,6 +12,5 @@ int main()
 #endif
 	App app;
 	app.run();
-
 	return 0;
 }
